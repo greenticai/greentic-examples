@@ -2,7 +2,7 @@ mcp:
   store:
     kind: http-single
     name: "weather_api"
-    url: "https://github.com/greentic-ai/greentic/raw/refs/heads/main/greentic/plugins/tools/weather_api.wasm"
+    url: "https://github.com/greenticai/greentic/raw/refs/heads/main/greentic/plugins/tools/weather_api.wasm"
   security:
     require_signature: false
   runtime:
@@ -10,3 +10,4 @@ mcp:
     timeout_ms: 8000
     fuel: 50000000
   http_enabled: true
+

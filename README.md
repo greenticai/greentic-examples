@@ -18,6 +18,7 @@ make build
 This compiles the pack sources into `dist/weather_pack.wasm` along with a manifest and SBOM that can be deployed with `greentic-runner`.
 
 > **Prerequisites**
-> - `packc` installed (`cargo install --git https://github.com/greentic-ai/greentic-pack packc --locked`). The crates.io build currently lacks the embedded workspace and will error with `could not find Cargo.toml`.
+> - `packc` installed (`cargo install --git https://github.com/greenticai/greentic-pack packc --locked`). The crates.io build currently lacks the embedded workspace and will error with `could not find Cargo.toml`.
 > - Flow schema available at `~/.cargo/registry/src/schemas/ygtc.flow.schema.json`. A copy is checked into `schemas/` for convenience—copy it into place before building.
 > - Rust target `wasm32-unknown-unknown` via `rustup target add wasm32-unknown-unknown`.
+
