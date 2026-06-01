@@ -1,0 +1,5 @@
+id: greentic.legal.nda.demo
+version: 0.1.0
+flow_files: ["flows/nda_intake.ygtc"]
+template_dirs: ["templates"]
+imports_required: ["secrets.get", "telemetry.emit"]
