@@ -6,6 +6,9 @@ Example configuration and content for Greentic tenants.
 
 - `bindings/` — ready-to-use tenant bindings for messaging, MCP tooling, and LLM access.
 - `pack/weather-demo/` — a minimal weather assistant pack with flows, templates, and build metadata.
+- `pack/legal-nda-demo/` — M2 prefill worked example (NDA intake with slot extraction).
+- `pack/accounting-invoice-demo/` — minimal invoice intake pack for the multi-endpoint demo.
+- `env/multi-endpoint-teams-demo/` — M1 worked example: two Teams endpoints in one environment with hard per-endpoint flow isolation.
 
 ## Weather demo pack
 
