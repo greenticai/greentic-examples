@@ -1,0 +1,42 @@
+id: invoice_intake
+title: Invoice Intake
+description: |
+  Minimal accounting flow for the multi-endpoint demo. Collects vendor
+  name, invoice number, and amount via an Adaptive Card form. Exists to
+  demonstrate that this pack's flows are ONLY reachable through the
+  accounting endpoint — never through the legal endpoint.
+type: messaging
+start: render_form
+schema_version: 2
+
+nodes:
+  render_form:
+    component.exec:
+      component: ai.greentic.component-adaptive-card
+      payload:
+        card:
+          type: AdaptiveCard
+          version: "1.5"
+          body:
+            - type: TextBlock
+              text: "Submit an Invoice"
+              weight: Bolder
+              size: Large
+            - type: Input.Text
+              id: vendor_name
+              label: "Vendor name"
+              isRequired: true
+            - type: Input.Text
+              id: invoice_number
+              label: "Invoice number"
+              isRequired: true
+            - type: Input.Number
+              id: amount
+              label: "Amount (USD)"
+              isRequired: true
+          actions:
+            - type: Action.Submit
+              title: "Submit for review"
+    operation: render
+    routing:
+      - reply: true

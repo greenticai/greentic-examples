@@ -1,0 +1,49 @@
+{
+  "_comment": "Reference shape of Environment.messaging_endpoints[] after setup.sh runs. This file is NOT consumed by any tool -- it documents the expected on-disk state for human readers. Actual endpoint_ids are ULIDs minted by `gtc op messaging endpoint add`.",
+  "messaging_endpoints": [
+    {
+      "schema": "greentic.messaging-endpoint.v1",
+      "env_id": "local",
+      "endpoint_id": "01JXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "provider_id": "teams-legal-bot",
+      "provider_type": "teams",
+      "display_name": "Legal Assistant on Teams",
+      "secret_refs": [
+        "secret://local/legal-nda-bundle/teams-legal-bot/bot_token",
+        "secret://local/legal-nda-bundle/teams-legal-bot/signing_secret"
+      ],
+      "linked_bundles": ["legal-nda-bundle"],
+      "welcome_flow": {
+        "bundle_id": "legal-nda-bundle",
+        "pack_id": "greentic.legal.nda.demo",
+        "flow_id": "nda_intake"
+      },
+      "generation": 2,
+      "created_at": "2026-06-01T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z",
+      "updated_by": "demo-setup"
+    },
+    {
+      "schema": "greentic.messaging-endpoint.v1",
+      "env_id": "local",
+      "endpoint_id": "01JYYYYYYYYYYYYYYYYYYYYYYYYY",
+      "provider_id": "teams-accounting-bot",
+      "provider_type": "teams",
+      "display_name": "Accounting Assistant on Teams",
+      "secret_refs": [
+        "secret://local/accounting-invoice-bundle/teams-accounting-bot/bot_token",
+        "secret://local/accounting-invoice-bundle/teams-accounting-bot/signing_secret"
+      ],
+      "linked_bundles": ["accounting-invoice-bundle"],
+      "welcome_flow": {
+        "bundle_id": "accounting-invoice-bundle",
+        "pack_id": "greentic.accounting.invoice.demo",
+        "flow_id": "invoice_intake"
+      },
+      "generation": 2,
+      "created_at": "2026-06-01T00:00:00Z",
+      "updated_at": "2026-06-01T00:00:00Z",
+      "updated_by": "demo-setup"
+    }
+  ]
+}
