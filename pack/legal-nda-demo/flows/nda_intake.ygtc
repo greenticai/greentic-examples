@@ -69,8 +69,8 @@ nodes:
         # prefill > payload > session > state > template_params. The
         # extractor's per-slot value map drops straight in.
         prefill:
-          counterparty: "{{extract_slots.slots.counterparty.value}}"
-          due_date: "{{extract_slots.slots.due_date.value}}"
+          counterparty: "{{extract_slots.values.counterparty}}"
+          due_date: "{{extract_slots.values.due_date}}"
     operation: render
     routing:
       - reply: true

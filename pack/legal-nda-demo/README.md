@@ -26,7 +26,7 @@ Fast2Flow → Dispatch{ target: nda_intake, utterance }
 nda_intake.extract_slots
   component: ai.greentic.component-slot-extractor
   in:  { utterance, slot_definitions: [counterparty, due_date] }
-  out: { slots: { counterparty: { value, ... }, due_date: { ... } } }
+  out: { slots: [...], values: { counterparty: "Acme Corp", due_date: "2026-07-15" } }
     │
     ▼
 nda_intake.render_form
