@@ -58,16 +58,18 @@ slot_schema:
 
 ## Component versions
 
-| Component | Floor |
-|-----------|-------|
+| Component      | Floor |
+|----------------|-------|
 | `ai.greentic.component-slot-extractor` | `0.1.x` (regex extraction landed in M2.1 PR 2) |
 | `ai.greentic.component-adaptive-card`  | floor that includes the `prefill` field (M2.3 PR #50) |
+| `greentic-runner`                      | `1.1.26775859893` (Phase D `slot_schema` → `slot_definitions` injection) |
 
-## Today vs Phase D
+## How runtime wiring works
 
-The flow declares `slot_schema` at the top level **and** inlines the same
-definitions in the `extract_slots` node payload. The flow-level field is
-the authoritative source for Fast2Flow scoping, design-time tools, and
-future Phase D runtime wiring — Phase D will read it directly and pass it
-into the extractor call so the duplication can be removed. The inlined
-copy keeps the example runnable on today's runtime.
+The flow declares `slot_schema` once, at the top level. At execute time
+the runner detects `ai.greentic.component-slot-extractor` nodes and
+injects the flow-level definitions into the invocation as
+`slot_definitions` — the `extract_slots` node only has to forward the
+utterance. An explicit `slot_definitions` key on the node still wins
+(back-compat), but the canonical authoring pattern is the flow-level
+field shown here.
