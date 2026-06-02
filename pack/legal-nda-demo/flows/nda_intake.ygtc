@@ -11,10 +11,10 @@ schema_version: 2
 
 # M2.4a — flow-level slot definitions consumed by the slot-extractor.
 # Each entry mirrors `component-slot-extractor`'s SlotDefinition wire shape.
-# Authoring tools, Fast2Flow scoping, and Phase-D runtime wiring all read
-# from this single source of truth. Today the same definitions are inlined
-# into the `extract_slots` node payload below until Phase D wires the
-# flow-level field directly into the extractor invocation.
+# Authoring tools, Fast2Flow scoping, and runtime wiring all read from this
+# single source of truth. Phase D runtime injects this directly into the
+# extractor's `slot_definitions` input when the node omits it
+# (greentic-runner >= 1.1.26775859893).
 slot_schema:
   - name: counterparty
     slot_type: string
@@ -30,14 +30,6 @@ nodes:
       component: ai.greentic.component-slot-extractor
       payload:
         utterance: "{{dispatch.utterance}}"
-        slot_definitions:
-          - name: counterparty
-            slot_type: string
-            pattern: 'between\s+([A-Z][\w&. ]*?)\s+and'
-            required: true
-          - name: due_date
-            slot_type: date
-            required: true
     operation: extract_slots
     routing:
       - to: render_form
