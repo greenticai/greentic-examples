@@ -1,0 +1,20 @@
+version: "1"
+project_root: "./"
+tenant: "demo"
+team: "default"
+environment: "dev"
+
+logging:
+  level: "debug"
+  format: "pretty"
+
+http:
+  host: "127.0.0.1"
+  port: 8080
+
+# Messaging provider — WebChat UI for the demo (served at /webchat)
+providers:
+  messaging:
+    webchat:
+      enabled: true
+      pack: "providers/messaging-webchat.gtpack"

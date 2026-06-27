@@ -1,0 +1,27 @@
+id: on_message
+title: Tavily Research Bot - Message Handler
+description: Route each incoming chat message to a Tavily-powered research agent and reply with its answer
+type: messaging
+start: research
+
+nodes:
+  # The only "logic" node: an Agentic Worker (dw.agent). `operation` selects
+  # which installed agent runs (must match the agent_id in
+  # agents/tavily_researcher.json). The agent receives the user's message text
+  # as `user_text` and returns `reply` / `trail` / `terminated_by`.
+  research:
+    dw.agent:
+      user_text: "{{in.text}}"
+    operation: tavily_researcher
+    routing:
+      - to: send_reply
+
+  # Send the agent's answer back to the user in the webchat channel.
+  send_reply:
+    messaging.emit:
+      input:
+        messages:
+          - type: message
+            text: "{{research.reply}}"
+    routing:
+      - out: true

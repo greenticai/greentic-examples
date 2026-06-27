@@ -1,0 +1,25 @@
+pack_id: tavily-bot
+version: 0.1.0
+kind: application
+publisher: Demo
+
+# Research chatbot: a single flow whose only node is an Agentic Worker
+# (dw.agent) that uses the Tavily design extension to search the web and
+# answer the user's question in chat. Uses built-in components only — the
+# agent's tools come from the installed `greentic.tavily` extension, not from
+# a WASM component shipped in this pack.
+
+components: []
+
+dependencies: []
+
+flows:
+  - id: on_message
+    file: flows/on_message.ygtc
+    tags:
+      - messaging
+      - default
+    entrypoints:
+      - default
+
+assets: []
