@@ -14,15 +14,22 @@ WebChat  ──message──▶  flow on_message
                          │     • calls tavily_search / tavily_extract
                          │     • synthesizes an answer + sources
                          ▼
-                   send_reply (messaging.emit)  ──▶ reply in WebChat
+                   send_reply (emit.response)   ──▶ reply in WebChat
 ```
 
 > **New pattern:** this is the first bundle in the repo to wire a `dw.agent`
-> node + a tool extension into a `gtc start` bundle. The flow/agent/provider
-> files are authored to match runner conventions, but the agentic-worker path
-> needs live keys + Redis to actually run, so it cannot be fully pre-tested
-> here. If the first run trips on a path detail, it'll be in the agent-config
-> discovery or secret provisioning (notes below).
+> node + a tool extension into a `gtc start` bundle. **Boot is verified** with
+> the research runtime (`gtc-research start`, greentic-start 1.2.0-research.1):
+> the bundle loads, the messaging route resolves to the pre-built app pack, and
+> the HTTP ingress comes up on :8080. Actually exchanging a chat message still
+> needs live keys (DeepSeek + Tavily) and a running Redis for the agentic loop.
+>
+> **Why the research runtime:** the multi-provider `dw.agent` + per-tool
+> `input_schema` work ships on the `research` branches. The stable `gtc`
+> toolchain (≤1.0.x) cannot build a flow containing `dw.agent` (its
+> `greentic-pack` predates the `dw.agent` builtin) and its `gtc setup` wizard
+> rejects this bundle. Use `gtc-research` until the `rnd` publish lane ships
+> `gtc-research setup`/`wizard` as binaries.
 
 ## Layout
 
@@ -43,7 +50,14 @@ the `operation:` field of the `dw.agent` node in `flows/on_message.ygtc`.
 
 ## Prerequisites
 
-- The `gtc` CLI built from this workspace (`greentic/greentic`).
+- **`gtc-research`** — the research runtime that understands `dw.agent`. Install
+  the pre-built binary (no compile):
+  ```bash
+  T=$( [ "$(uname -m)" = arm64 ] && echo aarch64-apple-darwin || echo x86_64-apple-darwin )
+  curl -sL "https://github.com/greenticai/greentic-start/releases/download/v1.2.0-research.1/greentic-start-v1.2.0-research.1-$T.tgz" \
+    | tar xz && cp greentic-start-*/greentic-start ~/.cargo/bin/gtc-research
+  gtc-research --version   # → greentic-start 1.2.0-research.1
+  ```
 - **Redis** — the agentic-worker runtime needs it for state:
   `docker run -p 6379:6379 redis` (or any local Redis).
 - An **LLM key** (the agent's brain). The agent is configured for DeepSeek
@@ -56,21 +70,34 @@ the `operation:` field of the `dw.agent` node in `flows/on_message.ygtc`.
 
 ## Run
 
+The app pack is **pre-built** at `packs/demo/default/default.gtpack`, so the
+runtime boots without a `setup`/build step. To rebuild it from source you need
+the research `greentic-pack` (`greentic-pack build --in apps/tavily-bot`, then
+copy `apps/tavily-bot/dist/tavily-bot.gtpack` → `packs/demo/default/default.gtpack`).
+
 ```bash
-# 1. Install the Tavily extension + agent config and sanity-check env.
+# 1. Redis for the agentic-worker state.
+docker run -d -p 6379:6379 redis
+
+# 2. Install the Tavily extension + agent config and sanity-check env.
 export GREENTIC_AW_REDIS_URL=redis://localhost:6379
 export GREENTIC_LLM_PROVIDER=deepseek
 export GREENTIC_LLM_MODEL=deepseek-chat
 export GREENTIC_LLM_API_KEY=sk-...        # your DeepSeek key
+export TAVILY_API_KEY=tvly-...            # your Tavily key
+export GREENTIC_EXT_ALLOW_UNSIGNED=1      # the Tavily ext is unsigned in this demo
 bash tavily-research-demo/setup.sh
 
-# 2. Provision bundle secrets (prompts for the Tavily key, etc.).
-gtc setup ./tavily-research-demo
-
-# 3. Start the demo (embedded NATS + webchat + runner).
-gtc start ./tavily-research-demo
-#    → open http://127.0.0.1:8080/webchat
+# 3. Start the demo with the RESEARCH runtime (cloudflared off → local only).
+gtc-research start --bundle ./tavily-research-demo --no-browser --nats off --cloudflared off
+#    → HTTP ingress comes up on http://127.0.0.1:8080 (a webchat webhook ingress,
+#      not a static page — connect a greentic-webchat frontend or POST the
+#      signed ingest payload to drive a conversation).
 ```
+
+Boot log to look for (confirms the research feature is live):
+`messaging app route resolved: pack=...default.gtpack pack_id=tavily-bot flow=on_message`
+followed by `demo ingress listening on http://127.0.0.1:8080`.
 
 Then in the webchat, ask something that needs fresh info, e.g.
 *"What did Anthropic announce most recently?"* or

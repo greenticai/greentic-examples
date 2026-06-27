@@ -1,0 +1,4 @@
+# Runtime artifacts (not part of the demo source)
+.greentic/
+logs/
+apps/*/dist/

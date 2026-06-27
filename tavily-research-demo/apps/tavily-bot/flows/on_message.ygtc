@@ -16,12 +16,13 @@ nodes:
     routing:
       - to: send_reply
 
-  # Send the agent's answer back to the user in the webchat channel.
+  # Send the agent's answer back to the user. `emit.response` is the builtin
+  # reply node (engine-handled) — it routes the message to the active messaging
+  # channel without needing a resolved component reference.
   send_reply:
-    messaging.emit:
-      input:
-        messages:
-          - type: message
-            text: "{{research.reply}}"
+    emit.response:
+      messages:
+        - type: text
+          text: "{{research.reply}}"
     routing:
       - out: true
